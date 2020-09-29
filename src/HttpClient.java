@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class HttpClient {
-	static String GET_URL = "http://httpbin.org/get"; //dummy test url for GET 
+	static String GET_URL = "http://httpbin.org/get?course=networking&assignment=1"; //dummy test url for GET 
     static String POST_URL = "http://httpbin.org/post";//dummy test url for POST
     final static Integer PORT = 80; //always 80 for HTTP requests
     
@@ -29,7 +29,6 @@ public class HttpClient {
 		Scanner scanner = new Scanner(System.in);
 		String command = scanner.nextLine();
 		
-		String[] words = command.split(" ");
 		if(command.contentEquals("help")) {
 			System.out.println("httpc is a curl-like application but supports HTTP protocol only.");
 			System.out.println("Usage:");
@@ -38,6 +37,7 @@ public class HttpClient {
 			System.out.println("       get   executes a HTTP GET request and prints the response."
 					+ "\n       post   executes a HTTP POST request and prints the response."
 					+ "\n       help   prints this screen");
+			System.out.println("Use \"httpc help [command]\" for more information about a command.");
 			System.out.println();
 			
 		} else if(command.contentEquals("help get")){
@@ -60,49 +60,55 @@ public class HttpClient {
 					+ "\n       -f fileAssociates the content of a file to the body HTTP POST request.");
 			System.out.println();
 
-		}else if(command.contentEquals("get -v")) {
+		}
+		else if((command.contains("get")) && (command.contains("-v")) && (command.contains(GET_URL))) {
 			try { 
-				responseMap = sendGetRequest(GET_URL);//sending GET request to "Server" 
+				responseMap = sendGetRequest(GET_URL);
 				System.out.println("\n" + responseMap.get("header"));
 				System.out.println("\n" + responseMap.get("body")); 
 			} 
 			catch (Exception e){
 				e.printStackTrace(); 
 			}
-			
-		}else if(command.contentEquals("get -h")) {
+		}
+		else if((command.contains("get")) && (command.contains("-h")) && (command.contains(GET_URL))) {
 			try { 
-				responseMap = sendGetRequest(GET_URL);//sending GET request to "Server" 
+				responseMap = sendGetRequest(GET_URL);
 				System.out.println("\n" + responseMap.get("header"));
 			} 
 			catch (Exception e){
 				e.printStackTrace(); 
 			}
-		}else if(command.contentEquals("post -v")) {
-			try { //adding query parameters to url 
-				String queryParams =
-						    "{" + "assignment : 1 "+ "," 
-								+ "course : Networking" + "}"; 
-				responseMap = sendPostRequest(POST_URL, queryParams);//sending POST request to "Server"
+		}
+		else if((command.contains("post")) && (command.contains("-v")) && (command.contains(POST_URL))) {
+			try { 
+				responseMap = sendGetRequest(POST_URL); 
 				System.out.println("\n" + responseMap.get("header"));
-				System.out.println(responseMap.get("body")); 
-			}
+				System.out.println("\n" + responseMap.get("body")); 
+			} 
 			catch (Exception e){
 				e.printStackTrace(); 
 			}
-		}else if(command.contentEquals("post -h")){
-			try { //adding query parameters to url 
-				String queryParams =
-						    "{" + "assignment : 1 "+ "," 
-								+ "course : Networking" + "}"; 
-				responseMap = sendPostRequest(POST_URL, queryParams);//sending POST request to "Server"
-				System.out.println(responseMap.get("body")); 
-			}
+		}
+		else if((command.contains("post")) && (command.contains("-h")) && (command.contains(POST_URL))) {
+			try { 
+				responseMap = sendGetRequest(POST_URL);
+				System.out.println("\n" + responseMap.get("header"));
+			} 
 			catch (Exception e){
 				e.printStackTrace(); 
 			}
-		}else if(command.contentEquals("post -d")) {
-			
+		}
+		else if((command.contains("post")) && (command.contains("-d")) && (command.contains(POST_URL))) {
+			try { 
+				
+				responseMap = sendGetRequest(GET_URL);
+				System.out.println("\n" + responseMap.get("header"));
+			} 
+			catch (Exception e){
+				
+				e.printStackTrace(); 
+			}
 		}
 		else {
 			System.out.println("Missing or error HTTP protocol.");
@@ -110,22 +116,6 @@ public class HttpClient {
 		}
 }
 		
-		
-	/*
-	 * //GET request try { responseMap = sendGetRequest(GET_URL);//sending GET
-	 * request to "Server" System.out.println("\n" + responseMap.get("header"));
-	 * System.out.println("\n" + responseMap.get("body")); } catch (Exception e){
-	 * e.printStackTrace(); }
-	 * 
-	 * 
-	 * //POST request try { //adding query parameters to url String queryParams =
-	 * "{" + "assignment : 1"+ "," + "course : Networking" + "}"; //could also have
-	 * asked for input on scanner and append it to the response responseMap =
-	 * sendPostRequest(POST_URL, queryParams);//sending POST request to "Server"
-	 * System.out.println(responseMap.get("body")); }catch (Exception e){
-	 * e.printStackTrace(); }
-	 */
-
     
 	private static Map<String, String> sendPostRequest(String url, String data) throws Exception {
 
@@ -217,4 +207,6 @@ public class HttpClient {
 	
 	
 }
+	 
+
 	 
